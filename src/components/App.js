@@ -4,7 +4,12 @@ import SearchBar from './SearchBar';
 import VideoList from './VideoList';
 
 class App extends React.Component  {
-    state = {videos: []};
+    state = {videos: [], selectedVideo: null};
+
+    onVideoSelect = video => {
+        console.log('hello from the app', video);
+    }
+
     onTermSubmit =  async  term => {
     const response =  await axios.get('https://www.googleapis.com/youtube/v3/search',
            {
@@ -24,9 +29,10 @@ class App extends React.Component  {
 
     render () {
         return (
-        <div> <SearchBar onFormSubmit = {this.onTermSubmit } />
-        I have {this.state.videos.length} videos.
-        <VideoList videos={this.state.videos} />
+        <div className="ui container" style={{marginTop: '10px'}}>
+            <SearchBar onFormSubmit = {this.onTermSubmit } />
+            I have {this.state.videos.length} videos.
+            <VideoList onVideoSelect = {this.onVideoSelect} videos = {this.state.videos} />
         </div>
        );
     }
