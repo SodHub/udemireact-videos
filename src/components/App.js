@@ -2,12 +2,19 @@ import React from 'react';
 import axios from 'axios';
 import SearchBar from './SearchBar';
 import VideoList from './VideoList';
+import VideoDetail from './VideoDetail';
 
 class App extends React.Component  {
     state = {videos: [], selectedVideo: null};
 
+
+    componentDidMount () {
+        this.onTermSubmit ('buildings')
+    }
+
     onVideoSelect = video => {
         console.log('hello from the app', video);
+        this.setState({selectedVideo: video});
     }
 
     onTermSubmit =  async  term => {
@@ -23,7 +30,10 @@ class App extends React.Component  {
               }
          });
 
-    this.setState({videos: response.data.items});
+    this.setState({
+        videos: response.data.items,
+        selectedVideo: response.data.items[0]
+    });
 
     };
 
@@ -32,7 +42,16 @@ class App extends React.Component  {
         <div className="ui container" style={{marginTop: '10px'}}>
             <SearchBar onFormSubmit = {this.onTermSubmit } />
             I have {this.state.videos.length} videos.
-            <VideoList onVideoSelect = {this.onVideoSelect} videos = {this.state.videos} />
+            <div className="ui grid">
+                <div className="ui row">
+                    <div className="eleven wide column">
+                         <VideoDetail video={this.state.selectedVideo} />
+                    </div>
+                    <div className="five wide column">
+                        <VideoList onVideoSelect = {this.onVideoSelect} videos = {this.state.videos} />
+                    </div>
+                </div>
+            </div>
         </div>
        );
     }
